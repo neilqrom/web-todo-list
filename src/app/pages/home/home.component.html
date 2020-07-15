@@ -1,0 +1,90 @@
+<section>
+    <div class="container-fluid">
+        <!-- Title -->
+        <div class="mt-5 text-center">
+            <h1 class="title-todo">TODO LIST</h1>
+        </div>
+        <hr />
+        <!-- Button Create Task -->
+        <button type="button" class="btn btn-outline-primary btn-lg m-3" data-toggle="modal" data-target="#modalCreate">
+            Crear una tarea
+        </button>
+
+        <!-- Modal Create Task-->
+        <div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel" *ngIf="flagAction">Crear una tarea</h5>
+                        <h5 class="modal-title" id="exampleModalLabel" *ngIf="!flagAction">Modificar una tarea</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form #taskForm="ngForm">
+                            <div class="form-group">
+                                <label for="inputTitleCreate">Título</label>
+                                <input type="text" name="inputText1" class="form-control" [(ngModel)]="title"
+                                    id="inputTitle" aria-describedby="titleHelp" placeholder="Título">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputTextareaCreate">Descripción</label>
+                                <textarea class="form-control" name="textArea1" id="inputTextareaCreate" rows="3"
+                                    [(ngModel)]="description" placeholder="Descripción de la tarea ..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputState">Estado</label>
+                                <select name="statusSelect" [(ngModel)]="statusId" class="form-control">
+                                    <option [ngValue]="item.id" *ngFor="let item of listStatus">{{item.description}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputState">Responsable</label>
+                                <select name="personSelect" [(ngModel)]="personId" class="form-control">
+                                    <option [ngValue]="item.id" *ngFor="let item of listResponsable">{{item.name}}</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-warning btn-lg"
+                            (click)="clean(taskForm)" *ngIf="flagAction">Limpiar</button>
+                        <button type="button" class="btn btn-outline-danger btn-lg"
+                            data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-outline-primary btn-lg" (click)="saveTask()" data-dismiss="modal" *ngIf="flagAction">Guardar</button>
+                        <button type="button" class="btn btn-outline-success btn-lg" (click)="updateTask()" data-dismiss="modal" *ngIf="!flagAction">Modificar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Table of manage tasks-->
+        <div class="table-responsive p-3">
+            <table class="table table-bordered">
+                <thead class="thead-success">
+                    <tr>
+                        <th scope="col" class="th-table">Título</th>
+                        <th scope="col" class="th-table">Descripción</th>
+                        <th scope="col" class="th-table">Estado</th>
+                        <th scope="col" class="th-table">Responsable</th>
+                        <th scope="col" class="th-table">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let task of listTasks">
+                        <td>{{task.title}}</td>
+                        <td>{{task.description}}</td>
+                        <td>{{task.status.description}}</td>
+                        <td>{{task.person.name}}</td>
+                        <td>
+                            <button class="btn btn-outline-success btn-lg mr-2" data-toggle="modal" data-target="#modalCreate" (click)="editTask(task)">Editar</button>
+                            <button class="btn btn-outline-danger btn-lg" (click)="deleteLogicTask(task)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
