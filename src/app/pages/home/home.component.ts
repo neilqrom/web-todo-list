@@ -104,13 +104,13 @@ export class HomeComponent implements OnInit {
       this.flagModal = false;
       return false;
     } else {
-      this.closebutton.nativeElement.click();
       return true;
     }
   }
 
   saveTask(form: NgForm) {
     if (this.validator()) {
+      this.closebutton.nativeElement.click();
       let error;
       const body = {
         title: this.title,
@@ -154,6 +154,8 @@ export class HomeComponent implements OnInit {
   }
 
   editTask(task: any) {
+    this.validatorTitle = false;
+    this.validatorDescription = false;
     this.taskId = task.id;
     this.title = task.title;
     this.description = task.description;
@@ -172,6 +174,7 @@ export class HomeComponent implements OnInit {
 
   updateTask(form: NgForm) {
     if (this.validator()) {
+      this.closebutton.nativeElement.click();
       let error;
       let response;
       const body = {
