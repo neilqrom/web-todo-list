@@ -6,33 +6,35 @@
         </div>
         <hr />
         <!-- Button Create Task -->
-        <button type="button" class="btn btn-outline-primary btn-lg m-3" data-toggle="modal" data-target="#modalCreate">
+        <button type="button" (click)="openModalCreateTask()" class="btn btn-outline-primary btn-lg m-3" data-toggle="modal" data-target="#modalCreate">
             Crear una tarea
         </button>
 
         <!-- Modal Create Task-->
-        <div class="modal fade" id="modalCreate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <div class="modal fade" id="modalCreate" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel" *ngIf="flagAction">Crear una tarea</h5>
                         <h5 class="modal-title" id="exampleModalLabel" *ngIf="!flagAction">Modificar una tarea</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button #closebutton type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <form #taskForm="ngForm">
                             <div class="form-group">
-                                <label for="inputTitleCreate">Título</label>
-                                <input type="text" name="inputText1" class="form-control" [(ngModel)]="title"
-                                    id="inputTitle" aria-describedby="titleHelp" placeholder="Título">
+                                <label for="inputTitleCreate" *ngIf="flagAction">Título <p class="red">*</p></label>
+                                <label for="inputTitleCreate" *ngIf="!flagAction">Título</label>
+                                <input type="text" name="inputText1" class="form-control" [(ngModel)]="title" [ngClass]="validatorTitle ? 'validator' : ''"
+                                    id="inputTitle" aria-describedby="title" placeholder="Título" required>
                             </div>
                             <div class="form-group">
-                                <label for="inputTextareaCreate">Descripción</label>
-                                <textarea class="form-control" name="textArea1" id="inputTextareaCreate" rows="3"
-                                    [(ngModel)]="description" placeholder="Descripción de la tarea ..."></textarea>
+                                <label for="inputTextareaCreate" *ngIf="flagAction">Descripción <p class="red">*</p></label>
+                                <label for="inputTextareaCreate" *ngIf="!flagAction">Descripción</label>
+                                <textarea class="form-control" name="textArea1" id="inputTextareaCreate" rows="3" [ngClass]="validatorDescription ? 'validator' : ''"
+                                    [(ngModel)]="description" placeholder="Descripción de la tarea ..." required></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="inputState">Estado</label>
@@ -53,15 +55,15 @@
                             (click)="clean(taskForm)" *ngIf="flagAction">Limpiar</button>
                         <button type="button" class="btn btn-outline-danger btn-lg"
                             data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-outline-primary btn-lg" (click)="saveTask()" data-dismiss="modal" *ngIf="flagAction">Guardar</button>
-                        <button type="button" class="btn btn-outline-success btn-lg" (click)="updateTask()" data-dismiss="modal" *ngIf="!flagAction">Modificar</button>
+                        <button type="button" class="btn btn-outline-primary btn-lg" (click)="saveTask(taskForm)" *ngIf="flagAction">Guardar</button>
+                        <button type="button" class="btn btn-outline-success btn-lg" (click)="updateTask(taskForm)" *ngIf="!flagAction">Modificar</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!--Table of manage tasks-->
-        <div class="table-responsive p-3">
+        <div class="table-responsive p-3 table-list-task">
             <table class="table table-bordered">
                 <thead class="thead-success">
                     <tr>
@@ -76,8 +78,8 @@
                     <tr *ngFor="let task of listTasks">
                         <td>{{task.title}}</td>
                         <td>{{task.description}}</td>
-                        <td>{{task.status.description}}</td>
-                        <td>{{task.person.name}}</td>
+                        <td>{{task.status?.description}}</td>
+                        <td>{{task.person?.name}}</td>
                         <td>
                             <button class="btn btn-outline-success btn-lg mr-2" data-toggle="modal" data-target="#modalCreate" (click)="editTask(task)">Editar</button>
                             <button class="btn btn-outline-danger btn-lg" (click)="deleteLogicTask(task)">Eliminar</button>
